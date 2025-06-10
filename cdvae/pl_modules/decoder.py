@@ -7,6 +7,7 @@ from cdvae.pl_modules.gemnet.gemnet import GemNetT
 
 
 def build_mlp(in_dim, hidden_dim, fc_num_layers, out_dim):
+    """构建基础的多层感知机"""
     mods = [nn.Linear(in_dim, hidden_dim), nn.ReLU()]
     for i in range(fc_num_layers-1):
         mods += [nn.Linear(hidden_dim, hidden_dim), nn.ReLU()]
@@ -15,7 +16,7 @@ def build_mlp(in_dim, hidden_dim, fc_num_layers, out_dim):
 
 
 class GemNetTDecoder(nn.Module):
-    """Decoder with GemNetT."""
+    """使用 GemNetT 作为解码器"""
 
     def __init__(
         self,
@@ -29,6 +30,7 @@ class GemNetTDecoder(nn.Module):
         self.cutoff = radius
         self.max_num_neighbors = max_neighbors
 
+        # 初始化 GemNetT 模型
         self.gemnet = GemNetT(
             num_targets=1,
             latent_dim=latent_dim,
@@ -56,7 +58,7 @@ class GemNetTDecoder(nn.Module):
             atom_frac_coords: (N_atoms, 3)
             atom_types: (N_atoms, MAX_ATOMIC_NUM)
         """
-        # (num_atoms, hidden_dim) (num_crysts, 3)
+        # 调用 GemNetT 预测坐标差分和中间特征
         h, pred_cart_coord_diff = self.gemnet(
             z=z,
             frac_coords=pred_frac_coords,
@@ -68,5 +70,6 @@ class GemNetTDecoder(nn.Module):
             to_jimages=None,
             num_bonds=None,
         )
+        # 将隐藏特征映射为各元素的概率
         pred_atom_types = self.fc_atom(h)
         return pred_cart_coord_diff, pred_atom_types

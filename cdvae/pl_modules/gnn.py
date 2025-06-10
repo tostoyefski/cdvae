@@ -1,5 +1,4 @@
-"""This module is adapted from https://github.com/Open-Catalyst-Project/ocp/tree/master/ocpmodels/models
-"""
+"""来自 OCP 项目的 GNN 模型实现，做了适当修改"""
 
 import torch
 import torch.nn as nn
@@ -28,6 +27,7 @@ except ImportError:
 
 
 class InteractionPPBlock(torch.nn.Module):
+    """处理三体相互作用的模块"""
     def __init__(
         self,
         hidden_channels,
@@ -129,6 +129,7 @@ class InteractionPPBlock(torch.nn.Module):
 
 
 class OutputPPBlock(torch.nn.Module):
+    """将消息聚合成最终输出的模块"""
     def __init__(
         self,
         num_radial,
@@ -168,6 +169,7 @@ class OutputPPBlock(torch.nn.Module):
 
 
 class DimeNetPlusPlus(torch.nn.Module):
+    """实现 DimeNet++ 模型结构"""
     r"""DimeNet++ implementation based on https://github.com/klicperajo/dimenet.
     Args:
         hidden_channels (int): Hidden embedding size.
@@ -428,7 +430,7 @@ class DimeNetPlusPlusWrap(DimeNetPlusPlus):
 
 
 class GemNetTEncoder(nn.Module):
-    """Wrapper for GemNetT."""
+    """GemNetT 的简单封装，用作编码器"""
 
     def __init__(
         self,
